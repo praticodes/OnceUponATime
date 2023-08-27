@@ -76,15 +76,17 @@ class Character(_Node):
         - traits: List of character traits.
         - motive: Character's motive or goal.
         - relationships: Dictionary of character relationships.
+        - attitudes:  Dictionary of character attitudes towards other characters.
     """
     name: str
     traits: list[str]
     motive: str
     relationships: dict[str, str]
+    attitudes: dict[str, str]
 
-    def __init__(self, name: str, traits: list[str], motive: str, relationships: dict[str, str]) -> None:
+    def __init__(self, name: str, traits: list[str], motive: str, relationships: dict[str, str], attitudes: dict[str, str]) -> None:
         """Initialize a character node with the given attributes."""
-        super().__init__({'name': name, 'traits': traits, 'motive': motive, 'relationships': relationships}, set())
+        super().__init__({'name': name, 'traits': traits, 'motive': motive, 'relationships': relationships, 'attitudes': attitudes}, set())
 
     def add_relationship(self, character: Character, relationship_type: str) -> None:
         """Add a relationship to another character."""
@@ -128,7 +130,7 @@ class TaleGraph(Graph):
     """
     This is a subclass of Graph that stores information on all characters, objects, and settings in a tale.
     >>> cinderella = TaleGraph()
-    >>> cinderella.add_character('Cinderella', ['kind', 'caring', 'hardworking', 'beautiful'], 'attend the royal ball', {'lover': 'Prince Charming', 'step-mother': 'Lady Tremaine', 'step sister': 'Anastasia', 'step sister': 'Drizella'})
+    >>> cinderella.add_character('Cinderella', ['kind', 'caring', 'hardworking', 'beautiful'], 'attend the royal ball', {'lover': 'Prince Charming', 'step-mother': 'Lady Tremaine', 'step sister': 'Anastasia', 'step sister': 'Drizella'}, {'Prince Charming': 'love'})
     >>> cinderella.add_setting('the enchanted forest', ['magical', 'vast', 'beautiful'])
     >>> cinderella.add_object('the glass slipper', ['magical', 'elegant', 'delicate'])
     """
@@ -136,21 +138,23 @@ class TaleGraph(Graph):
     def __init__(self):
         super().__init__()
 
-    def add_character(self, name: str, traits: list[str], motive: str, relationships: dict[str, str]):
+    def add_character(self, name: str, traits: list[str], motive: str, relationships: dict[str, str], attitudes: dict[str, str]) -> None:
         """ Add a character as a _Node in the graph.
         """
-        character = Character(name, traits, motive, relationships)
+        character = Character(name, traits, motive, relationships, attitudes)
         self._nodes[name] = character
 
-    def add_setting(self, name: str, descriptions: list[str]):
+    def add_setting(self, name: str, descriptions: list[str]) -> None:
         """ Add a setting as a _Node in the graph.
         """
         setting = Setting(name, descriptions)
         self._nodes[name] = setting
 
-    def add_object(self, name: str, descriptions: list[str]):
+    def add_object(self, name: str, descriptions: list[str]) -> None:
         """ Add an object as a _Node in the graph.
         """
         setting = Setting(name, descriptions)
         self._nodes[name] = setting
+
+
 

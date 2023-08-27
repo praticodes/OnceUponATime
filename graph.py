@@ -69,7 +69,7 @@ class Graph:
 
 
 class Character(_Node):
-    """A character node in the graph.
+    """A character _Node in the TaleGraph.
 
     Instance Attributes:
         - name: The name of the character.
@@ -82,9 +82,9 @@ class Character(_Node):
     motive: str
     relationships: dict[str, str]
 
-    def __init__(self, name: str, traits: list[str], motive: str) -> None:
+    def __init__(self, name: str, traits: list[str], motive: str, relationships: dict[str, str]) -> None:
         """Initialize a character node with the given attributes."""
-        super().__init__({'name': name, 'traits': traits, 'motive': motive, 'relationships': {}})
+        super().__init__({'name': name, 'traits': traits, 'motive': motive, 'relationships': relationships}, set())
 
     def add_relationship(self, character: Character, relationship_type: str) -> None:
         """Add a relationship to another character."""
@@ -94,43 +94,63 @@ class Character(_Node):
 
 class Setting(_Node):
     """
-    This is a subclass of _Node that stores information on a specific setting from some fairytale.
-    """
+    A setting _Node in the TaleGraph.
 
-    def __init__(self):
-        """"""
-        super().__init__(item=dict, neighbours=set())
+    Instance Attributes:
+        - name: The name of the character.
+        - descriptions: list of descriptions of the setting.
+    """
+    name: str
+    descriptions: list[str]
+
+    def __init__(self, name: str, descriptions: list[str]) -> None:
+        """Initialize a setting node with the given attributes."""
+        super().__init__({'name': name, 'description': descriptions}, set())
 
 
 class Object(_Node):
     """
-    This is a subclass of _Node that stores information on a specific object from some fairytale.
-    """
+    A setting Object in the TaleGraph.
 
-    def __init__(self):
-        """"""
-        super().__init__(item=dict, neighbours=set())
+    Instance Attributes:
+        - name: The name of the object.
+        - descriptions: list of descriptions or properties of the setting.
+    """
+    name: str
+    descriptions: list[str]
+
+    def __init__(self, name: str, descriptions: list[str]) -> None:
+        """Initialize an object node with the given attributes."""
+        super().__init__({'name': name, 'description': descriptions}, set())
 
 
 class TaleGraph(Graph):
     """
     This is a subclass of Graph that stores information on all characters, objects, and settings in a tale.
+    >>> cinderella = TaleGraph()
+    >>> cinderella.add_character('Cinderella', ['kind', 'caring', 'hardworking', 'beautiful'], 'attend the royal ball', {'lover': 'Prince Charming', 'step-mother': 'Lady Tremaine', 'step sister': 'Anastasia', 'step sister': 'Drizella'})
+    >>> cinderella.add_setting('the enchanted forest', ['magical', 'vast', 'beautiful'])
+    >>> cinderella.add_object('the glass slipper', ['magical', 'elegant', 'delicate'])
     """
 
     def __init__(self):
         super().__init__()
 
-    def add_character(self, name: str, traits: list[str], motive: str, relationships: dict[str, _Node]):
+    def add_character(self, name: str, traits: list[str], motive: str, relationships: dict[str, str]):
         """ Add a character as a _Node in the graph.
         """
-        self.add_node({"name": name, "traits": traits, "motive": motive, })
+        character = Character(name, traits, motive, relationships)
+        self._nodes[name] = character
 
-    def add_setting(self, name: str, description: str):
+    def add_setting(self, name: str, descriptions: list[str]):
         """ Add a setting as a _Node in the graph.
         """
-        self.add_node({"name": name, "description": description})
+        setting = Setting(name, descriptions)
+        self._nodes[name] = setting
 
-    def add_object(self, name: str, description: str):
+    def add_object(self, name: str, descriptions: list[str]):
         """ Add an object as a _Node in the graph.
         """
-        self.add_node({"name": name, "description": description})
+        setting = Setting(name, descriptions)
+        self._nodes[name] = setting
+
